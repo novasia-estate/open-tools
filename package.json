@@ -1,0 +1,9 @@
+{
+  "name": "novasia-open-tools-showcase",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Browser-first data and planning utilities by NovAsia",
+  "license": "MIT",
+  "scripts": { "build": "node build.cjs", "test": "node --test tests/tools.test.cjs" },
+  "engines": { "node": ">=22" }
+}
