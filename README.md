@@ -2,13 +2,13 @@
 
 Small, practical browser utilities for prices, property data and payment plans. No account, uploads, API keys or runtime dependencies.
 
-**[Open the tools](https://novasia-estate.github.io/open-tools/)** · [NovAsia](https://novasia.estate/en/) · [Company GitHub](https://github.com/novasia-estate/)
+**[Open the tools](https://tools.novasia.estate/)** · [NovAsia](https://novasia.estate/en/) · [Company GitHub](https://github.com/novasia-estate/)
 
 | Tool | What it does | Try it |
 | --- | --- | --- |
-| Price & area normalizer | Parses multilingual price abbreviations, preserves currency labels, converts area units and calculates price per m². | [Live demo](https://novasia-estate.github.io/open-tools/normalizer.html) |
-| Payment milestone planner | Allocates a total across dated percentages, with cent rounding and CSV / iCalendar export. | [Live demo](https://novasia-estate.github.io/open-tools/payment-planner.html) |
-| CSV cleaner & deduplicator | Reads comma/semicolon/tab data, handles quoted fields, trims whitespace and removes exact duplicate rows. | [Live demo](https://novasia-estate.github.io/open-tools/csv-cleaner.html) |
+| Price & area normalizer | Parses multilingual price abbreviations, preserves currency labels, converts area units and calculates price per m². | [Live demo](https://tools.novasia.estate/normalizer.html) |
+| Payment milestone planner | Allocates a total across dated percentages, with cent rounding and CSV / iCalendar export. | [Live demo](https://tools.novasia.estate/payment-planner.html) |
+| CSV cleaner & deduplicator | Reads comma/semicolon/tab data, handles quoted fields, trims whitespace and removes exact duplicate rows. | [Live demo](https://tools.novasia.estate/csv-cleaner.html) |
 
 ## Examples
 

@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
-const base = 'https://novasia-estate.github.io/open-tools/';
+const base = 'https://tools.novasia.estate/';
 const repo = 'https://github.com/novasia-estate/open-tools';
 const docs = path.join(__dirname, 'docs');
 const shell = (slug, title, description, content, tool = '') => `<!doctype html>
