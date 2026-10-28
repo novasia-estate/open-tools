@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Map CSV columns, validate records and download a clear quality report. Free local spreadsheet and property-feed tool by NovAsia Estate."><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-nyRTKX4YB6eWxPWtK/UqedUMlRs5lnsDN4tqcn1AWfA='; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'"><title>CSV Quality Lab — NovAsia Estate</title>
+<style>
+:root{color-scheme:dark;--bg:#091e19;--panel:#122e26;--line:#345044;--gold:#dfb968;--muted:#b3c9bf;--ink:#f1f5ed}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}a{color:var(--gold);text-underline-offset:4px}button,input,textarea,select{font:inherit}button,a,input,textarea,select{outline-offset:4px}main,header,footer{max-width:1120px;margin:auto;padding:24px}header{display:flex;justify-content:space-between;gap:20px;align-items:center;border-bottom:1px solid var(--line)}.brand{font-weight:700;text-decoration:none}.badge,.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}h1{font-size:clamp(30px,5vw,48px);line-height:1.12;margin:14px 0}h2{font-size:22px;margin:0 0 12px}h3{font-size:17px}p{max-width:800px;color:var(--muted)}.intro{margin-bottom:28px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;margin:20px 0}.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.row label{flex:1}.secondary{background:transparent;color:var(--gold)}button{border:1px solid var(--gold);border-radius:9px;background:var(--gold);color:#17241c;padding:11px 18px;font-weight:650;cursor:pointer}button:disabled{opacity:.45;cursor:default}.secondary{color:var(--gold)}input,select,textarea{border:1px solid #527164;border-radius:7px;background:#0a211a;color:var(--ink);padding:9px;max-width:100%}textarea{width:100%;min-height:230px;font:13px/1.6 ui-monospace,monospace;margin:12px 0;resize:vertical}label{display:block;font-size:13px;color:var(--muted)}label>input:not([type=checkbox]),label>select{display:block;width:100%;margin-top:5px}input[type=file]{width:100%;margin-top:6px}.column-rule{display:grid;grid-template-columns:minmax(100px,1fr) 1fr 1fr 100px;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}.check{display:flex;align-items:center;gap:7px}.check input{width:18px;height:18px}.notice,.error{padding:14px 18px;border-left:3px solid var(--gold);background:var(--panel);margin:20px 0;color:var(--muted)}.error{border-color:#ff8989;color:#ffd3d3}#summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#09221b;border-radius:10px;padding:15px}.stat strong{display:block;font-size:30px;color:var(--gold)}.stat span{font-size:13px;color:var(--muted)}#preview{overflow:auto;max-height:380px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line);overflow-wrap:anywhere;max-width:240px}th{color:var(--gold)}#issues{padding-left:22px;color:var(--muted)}footer{border-top:1px solid var(--line);font-size:13px}.links{display:flex;gap:18px;flex-wrap:wrap}small{color:var(--muted)}[hidden]{display:none!important}@media(max-width:650px){main,header,footer{padding:16px}.panel{padding:17px}.badge{font-size:10px}.column-rule{grid-template-columns:1fr 1fr;gap:10px}.column-rule strong{grid-column:1/-1}#summary{grid-template-columns:1fr 1fr}button{width:100%}header .brand{white-space:nowrap}.row label{flex-basis:100%}}
+</style></head><body>
+<header><a class="brand" href="https://novasia.estate/" target="_blank" rel="noopener">NovAsia Estate ↗</a><span class="badge">Open data tools · v1.0</span></header>
+<main><section class="intro"><span class="eyebrow">Spreadsheet imports, made reviewable</span><h1>CSV Quality Lab</h1><p>Rename columns, choose validation rules and separate clean records from rows that need attention. Built for property feeds, research tables and everyday spreadsheets.</p><small>Your CSV stays in this browser. No sign-up, input uploads or tracking by this app.</small></section>
+<section class="panel"><h2>1. Add your CSV</h2><div class="row"><label>Open UTF-8 CSV, up to 2 MB<input id="file" type="file" accept=".csv,.tsv,text/csv,text/tab-separated-values"></label><label>Delimiter<select id="delimiter"><option value="auto">Detect automatically</option><option value=",">Comma</option><option value=";">Semicolon</option><option value="&#9;">Tab</option></select></label></div><label for="csv">Or paste CSV text</label><textarea id="csv" spellcheck="false"></textarea><div class="row"><button id="inspect">Inspect columns</button><button id="example" class="secondary">Load synthetic example</button></div><p><small>The example contains 5 records: 2 valid, 2 needing review and 1 exact duplicate under its preset rules.</small></p></section>
+<section id="step-two" class="panel" hidden><h2>2. Choose the rules</h2><p>Every column is retained. New uploads start with text checks; select stricter rules where needed. Decimal formats are explicit and no currency or units are guessed.</p><div id="mapping"></div><div class="row" style="margin-top:18px"><label class="check"><input id="trim" type="checkbox" checked>Trim surrounding whitespace</label><label class="check"><input id="dedupe" type="checkbox" checked>Report and exclude exact duplicate accepted rows</label><button id="analyze">Run quality report</button></div></section>
+<div id="status" role="status" aria-live="polite"></div>
+<section id="results" class="panel" hidden><h2>3. Review and export</h2><div id="summary"></div><h3>Validation notes</h3><ul id="issues"></ul><h3>Accepted records preview</h3><div id="preview"></div><div class="row" style="margin-top:22px"><button id="download-good" disabled>Accepted CSV</button><button id="download-rejected" class="secondary" disabled>Rows needing review</button><button id="download-report" class="secondary" disabled>Full JSON report</button></div><p><small>Rejected records retain their original fields in a separate report. Record numbers exclude the header and count quoted multiline fields as one record. Formula-like CSV values are prefixed with an apostrophe; JSON retains original text.</small></p></section>
+<section class="panel"><h2>Continue your data workflow</h2><p>Clean table structure first, then normalize property price and area fields with the <a href="https://www.npmjs.com/package/novasia-listing-normalizer" target="_blank" rel="noopener">Listing Normalizer SDK</a>. For a quick one-off conversion, try the <a href="https://tools.novasia.estate/normalizer.html" target="_blank" rel="noopener">price and area demo</a>.</p><p>Published by <a href="https://novasia.estate/" target="_blank" rel="noopener">NovAsia Estate — property projects and research in Southeast Asia</a>. Format checks do not verify market prices, ownership, availability, email delivery or the truth of a dataset.</p></section>
+</main><footer><div class="links"><a href="https://novasia.estate/" target="_blank" rel="noopener">NovAsia home</a><a href="https://github.com/novasia-estate/csv-quality-lab" target="_blank" rel="noopener">Source, examples and CLI</a><a href="https://github.com/novasia-estate/listing-normalizer" target="_blank" rel="noopener">Related listing-data SDK</a></div><p>MIT licensed · No external dependencies · 10,000 records and 200 columns maximum. Hosting providers have their own infrastructure policies; this application makes no input upload requests.</p></footer>
+<script>(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.CSVQuality=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
+'use strict';
+  function parseCSV(text, delimiter = 'auto') {
+    text = String(text).replace(/^\uFEFF/, '');
+    if (text.length > 2e6) throw Error('Limit this browser tool to 2 MB of CSV text.');
+    if (!text.trim()) throw Error('Paste CSV with a header row.');
+    if (delimiter === 'auto') {
+      const counts = { ',': 0, ';': 0, '\t': 0 }; let quoted = false;
+      for (let i = 0; i < text.length && !(!quoted && /[\r\n]/.test(text[i])); i++) {
+        if (text[i] === '"') { if (quoted && text[i + 1] === '"') i++; else quoted = !quoted; }
+        else if (!quoted && text[i] in counts) counts[text[i]]++;
+      }
+      delimiter = Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0];
+    }
+    if (![',', ';', '\t'].includes(delimiter)) throw Error('Use comma, semicolon or tab.');
+    const rows = []; let row = [], cell = '', quoted = false, closed = false;
+    const endCell = () => { row.push(cell); cell = ''; closed = false; if (row.length > 200) throw Error('Limit CSV to 200 columns.'); };
+    const endRow = () => { endCell(); rows.push(row); row = []; if (rows.length > 10001) throw Error('Limit CSV to 10,000 data rows.'); };
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (quoted) { if (char === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else { quoted = false; closed = true; } } else cell += char; }
+      else if (char === delimiter) endCell();
+      else if (char === '\n' || char === '\r') { if (char === '\r' && text[i + 1] === '\n') i++; endRow(); }
+      else if (char === '"') { if (cell || closed) throw Error('Invalid CSV quote. Quote the whole field and escape inner quotes as double quotes.'); quoted = true; }
+      else { if (closed) throw Error('Unexpected text after a closing CSV quote.'); cell += char; }
+    }
+    if (quoted) throw Error('CSV has an unclosed quoted field.');
+    if (cell || closed || row.length) endRow();
+    return { rows, delimiter };
+  }
+  function safeCell(value) { value = String(value); return /^[\s\uFEFF]*[=+\-@\t\r]/.test(value) ? "'" + value : value; }
+  function csv(rows) { return rows.map(row => row.map(value => '"' + safeCell(value).replace(/"/g, '""') + '"').join(',')).join('\r\n') + '\r\n'; }
+  const TYPES = Object.freeze(['text','integer','decimal','decimal-comma','date','email','url']);
+  function inspect(text, delimiter='auto') {
+    if(typeof text!=='string'||new TextEncoder().encode(text).length>2e6) throw Error('Use UTF-8 CSV text no larger than 2 MB.');
+    const parsed = parseCSV(text, delimiter), headers = parsed.rows[0].map(value=>value.trim());
+    if (headers.some(value=>!value) || new Set(headers).size!==headers.length) throw Error('Headers must be nonempty and unique after trimming.');
+    return {headers,delimiter:parsed.delimiter,dataRows:parsed.rows.length-1};
+  }
+  function valid(value,type) {
+    if (type==='text') return true;
+    if (type==='integer') return /^[-+]?\d+$/.test(value) && Number.isSafeInteger(Number(value));
+    if (type==='decimal' || type==='decimal-comma') {
+      const regex = type==='decimal' ? /^[-+]?\d+(?:\.\d+)?$/ : /^[-+]?\d+(?:,\d+)?$/;
+      return regex.test(value) && Number.isFinite(Number(value.replace(',','.'))) && Math.abs(Number(value.replace(',','.')))<=1e15;
+    }
+    if (type==='date') return /^\d{4}-\d{2}-\d{2}$/.test(value) && value>='1900-01-01' && value<='9999-12-31' && Number.isFinite(Date.parse(value+'T00:00:00Z')) && new Date(value+'T00:00:00Z').toISOString().slice(0,10)===value;
+    if (type==='email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    if (type==='url') { try { const u=new URL(value);return ['http:','https:'].includes(u.protocol) && !!u.hostname; } catch { return false; } }
+    return false;
+  }
+  function analyze(text, options={}) {
+    const {delimiter='auto',trim=true,dedupe=true,columns}=options;
+    if(typeof trim!=='boolean'||typeof dedupe!=='boolean') throw Error('trim and dedupe must be true or false.');
+    const parsed=parseCSV(text,delimiter),headers=inspect(text,delimiter).headers;
+    const rules=columns===undefined ? headers.map(source=>({source,target:source,type:'text',required:false})) : columns;
+    if(!Array.isArray(rules)||rules.length!==headers.length) throw Error('Map every source column exactly once; no silent column dropping.');
+    const names=new Set(),sources=new Set();
+    for(const rule of rules) {
+      if(!rule||!headers.includes(rule.source)||sources.has(rule.source)) throw Error('Each source column must be mapped exactly once.');
+      if(typeof rule.target!=='string'||!rule.target.trim()||rule.target!==rule.target.trim()||rule.target.length>200||/[\x00-\x1f]/.test(rule.target)||names.has(rule.target)) throw Error('Target names must be unique, trimmed, nonempty and at most 200 characters.');
+      if(!TYPES.includes(rule.type)||typeof rule.required!=='boolean') throw Error('Choose a supported type and explicit required flag.');
+      sources.add(rule.source);names.add(rule.target);
+    }
+    const indices=rules.map(rule=>headers.indexOf(rule.source)),outputHeaders=rules.map(rule=>rule.target);
+    const accepted=[],rejected=[],issues=[],duplicates=[],blankRows=[],seen=new Map();
+    parsed.rows.slice(1).forEach((input,index)=>{
+      const record=index+1; // Logical data record, excluding header; not a physical line number.
+      if(input.every(cell=>!cell.trim())) {blankRows.push(record);return;}
+      if(input.length!==headers.length) {
+        const problem={record,code:'column_count',message:`Expected ${headers.length} fields, received ${input.length}.`};
+        issues.push(problem);rejected.push({record,original:input,issues:[problem]});return;
+      }
+      const row=indices.map(i=>trim?input[i].trim():input[i]),problems=[];
+      rules.forEach((rule,i)=>{
+        const value=row[i];
+        if(!value.trim()) { if(rule.required) problems.push({record,column:rule.target,code:'required',message:'Required value is empty.'}); }
+        else if(!valid(value,rule.type)) problems.push({record,column:rule.target,code:'type',message:`Expected ${rule.type}; value retained without guessing.`});
+      });
+      if(problems.length) {issues.push(...problems);rejected.push({record,original:input,issues:problems});return;}
+      const key=JSON.stringify(row);
+      if(dedupe&&seen.has(key)) {duplicates.push({record,duplicateOf:seen.get(key)});return;}
+      seen.set(key,record);accepted.push({record,values:row});
+    });
+    const protectedCells=[outputHeaders,...accepted.map(row=>row.values)].flat().filter(value=>safeCell(value)!==value).length;
+    return {version:'1.0.0',delimiter:parsed.delimiter,headers:outputHeaders,
+      summary:{inputRecords:parsed.rows.length-1,accepted:accepted.length,rejected:rejected.length,duplicates:duplicates.length,blank:blankRows.length,issues:issues.length,protectedCells},
+      accepted,rejected,issues,duplicates,blankRows,
+      cleanedCSV:csv([outputHeaders,...accepted.map(row=>row.values)]),
+      rejectedCSV:csv([['record','original_fields_json','issues_json'],...rejected.map(row=>[row.record,JSON.stringify(row.original),JSON.stringify(row.issues)])])};
+  }
+  return Object.freeze({parseCSV,inspect,analyze,csv,TYPES});
+});
+
+const EXAMPLE_CSV="id;price;area;available;contact\r\nTH-001;3500000;80;2026-12-01;team@example.com\r\nTH-002;;65;2026-02-30;team@example.com\r\nTH-001;3500000;80;2026-12-01;team@example.com\r\nID-003;220000;not-known;2027-01-01;no-email\r\nKH-004;95000;45;2026-11-01;agent@example.com\r\n";
+const EXAMPLE_SCHEMA={"columns":[{"source":"id","target":"listing_id","type":"text","required":true},{"source":"price","target":"price","type":"decimal","required":true},{"source":"area","target":"area_sqm","type":"decimal","required":true},{"source":"available","target":"available_on","type":"date","required":true},{"source":"contact","target":"contact","type":"email","required":false}],"trim":true,"dedupe":true};
+'use strict';
+const $=id=>document.getElementById(id);
+let mapping=[],report=null,inspectedText='';
+const node=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
+function invalidate(){report=null;for(const id of ['download-good','download-rejected','download-report'])$(id).disabled=true;$('results').hidden=true;}
+function message(text,bad=false){$('status').textContent=text;$('status').className=bad?'error':'notice';}
+function inspectColumns(preset){
+  invalidate();
+  try{
+    const result=CSVQuality.inspect($('csv').value,$('delimiter').value);
+    inspectedText=$('csv').value;mapping=[];$('mapping').replaceChildren();
+    for(const source of result.headers){
+      const rule=preset?.columns.find(c=>c.source===source)||{target:source,type:'text',required:false};
+      const card=node('div');card.className='column-rule';
+      const title=node('strong',source);const nameLabel=node('label','Output name');
+      const target=node('input');target.value=rule.target;target.maxLength=200;target.setAttribute('aria-label','Output name for '+source);nameLabel.append(target);
+      const typeLabel=node('label','Check');const type=node('select');type.setAttribute('aria-label','Type for '+source);
+      for(const value of CSVQuality.TYPES){const opt=node('option',value);opt.value=value;type.append(opt);}type.value=rule.type;typeLabel.append(type);
+      const reqLabel=node('label');reqLabel.className='check';const required=node('input');required.type='checkbox';required.checked=rule.required;reqLabel.append(required,node('span','Required'));
+      card.append(title,nameLabel,typeLabel,reqLabel);$('mapping').append(card);mapping.push({source,target,type,required});
+      for(const control of [target,type,required])control.addEventListener('change',invalidate);
+    }
+    $('step-two').hidden=false;$('analyze').disabled=false;
+    message(`${result.headers.length} columns · ${result.dataRows} data records. Review the rules, then run the report.`);
+  }catch(error){$('step-two').hidden=true;$('analyze').disabled=true;message(error.message,true);}
+}
+function run(){
+  invalidate();
+  try{
+    if(inspectedText!==$('csv').value)throw Error('CSV changed. Inspect columns again before analysing.');
+    report=CSVQuality.analyze($('csv').value,{delimiter:$('delimiter').value,trim:$('trim').checked,dedupe:$('dedupe').checked,columns:mapping.map(m=>({source:m.source,target:m.target.value,type:m.type.value,required:m.required.checked}))});
+    $('summary').replaceChildren();
+    for(const [label,key] of [['Accepted','accepted'],['Needs review','rejected'],['Duplicates','duplicates'],['Blank records','blank']]){const card=node('div');card.className='stat';card.append(node('strong',String(report.summary[key])),node('span',label));$('summary').append(card);}
+    $('issues').replaceChildren();for(const issue of report.issues.slice(0,30))$('issues').append(node('li',`Record ${issue.record}${issue.column?' · '+issue.column:''}: ${issue.message}`));
+    if(!report.issues.length)$('issues').append(node('li','No rejected records under the rules you selected. This does not verify the facts in the data.'));
+    const table=node('table'),head=node('thead'),tr=node('tr');for(const h of ['Record',...report.headers])tr.append(node('th',h));head.append(tr);table.append(head);
+    const body=node('tbody');for(const row of report.accepted.slice(0,12)){const tr=node('tr');for(const cell of [row.record,...row.values])tr.append(node('td',String(cell)));body.append(tr);}table.append(body);$('preview').replaceChildren(table);
+    $('results').hidden=false;for(const id of ['download-good','download-rejected','download-report'])$(id).disabled=false;
+    message(`${report.summary.issues} validation issues. ${report.summary.protectedCells} formula-like cells will be escaped in the accepted CSV. Preview shows up to 12 accepted records; JSON contains all records and issues.`);
+  }catch(error){message(error.message,true);}
+}
+function download(kind){if(!report)return;const content=kind==='json'?JSON.stringify(report,null,2):kind==='rejected'?report.rejectedCSV:report.cleanedCSV;const blob=new Blob([content],{type:kind==='json'?'application/json':'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob),a=node('a');a.href=url;a.download=kind==='json'?'csv-quality-report.json':kind==='rejected'?'csv-needs-review.csv':'csv-accepted.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('inspect').addEventListener('click',()=>inspectColumns());$('analyze').addEventListener('click',run);
+$('example').addEventListener('click',()=>{$('csv').value=EXAMPLE_CSV;$('delimiter').value='auto';inspectColumns(EXAMPLE_SCHEMA);});
+$('csv').addEventListener('input',()=>{invalidate();$('analyze').disabled=true;message('Input changed. Inspect columns to update the mapping.');});
+$('delimiter').addEventListener('change',()=>{invalidate();$('analyze').disabled=true;message('Delimiter changed. Inspect columns again.');});
+for(const id of ['trim','dedupe'])$(id).addEventListener('change',invalidate);
+$('file').addEventListener('change',async()=>{try{const file=$('file').files[0];if(!file)return;if(file.size>2e6)throw Error('File exceeds 2 MB.');$('csv').value=new TextDecoder('utf-8',{fatal:true}).decode(await file.arrayBuffer());inspectColumns();}catch(error){invalidate();message('Cannot read file: '+error.message,true);}});
+$('download-good').addEventListener('click',()=>download('good'));$('download-rejected').addEventListener('click',()=>download('rejected'));$('download-report').addEventListener('click',()=>download('json'));
+$('csv').value=EXAMPLE_CSV;inspectColumns(EXAMPLE_SCHEMA);
+</script></body></html>

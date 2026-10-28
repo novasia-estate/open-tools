@@ -48,6 +48,8 @@ Serve the `docs/` directory with any static server, or deploy it through GitHub 
 
 ## More from NovAsia
 
+For column mapping and per-record format checks, open [CSV Quality Lab](https://tools.novasia.estate/csv-quality-lab.html), [its Hugging Face Space](https://huggingface.co/spaces/novasia-estate/csv-quality-lab) or [the source and CLI](https://github.com/novasia-estate/csv-quality-lab). This extends the basic cleaner with explicit schema validation and a separate rejected-record report.
+
 For automated listing imports, use the [Listing Normalizer SDK on npm](https://www.npmjs.com/package/novasia-listing-normalizer) or [browse its source and batch examples](https://github.com/novasia-estate/listing-normalizer). It takes this browser tool's price and area parsing into typed JavaScript imports and a JSON CLI with row-level validation reports.
 
 - [NovAsia SEA Yield calculator](https://podkopov-hub.github.io/southeast-asia-real-estate-analytics/) and [npm package](https://www.npmjs.com/package/novasia-sea-yield)
