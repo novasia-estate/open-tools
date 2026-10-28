@@ -63,3 +63,7 @@ For automated listing imports, use the [Listing Normalizer SDK on npm](https://w
 Related publications are not runtime dependencies or proof of independent validation of these tools. Suggestions and reproducible bug reports are welcome in Issues.
 
 MIT © 2026 NovAsia.
+
+### Exact installment schedules and paid-status review
+
+The [Payment Milestone Studio](https://tools.novasia.estate/payment-milestone-studio.html) extends the simple planner with chosen decimal precision, paid/overdue/outstanding totals, and three editable synthetic examples. [Source, reusable engine and CLI](https://github.com/novasia-estate/payment-milestone-studio). Published by [NovAsia Estate](https://novasia.estate/).
