@@ -2,6 +2,8 @@
 
 Small, practical browser utilities for prices, property data and payment plans. No account, uploads, API keys or runtime dependencies.
 
+Published by [NovAsia Estate](https://novasia.estate/), with property research and buyer guides for Southeast Asia.
+
 **[Open the tools](https://tools.novasia.estate/)** · [NovAsia](https://novasia.estate/en/) · [Company GitHub](https://github.com/novasia-estate/)
 
 | Tool | What it does | Try it |
@@ -45,6 +47,8 @@ npm run build
 Serve the `docs/` directory with any static server, or deploy it through GitHub Pages (`main`, `/docs`). Generated HTML comes from `build.cjs`. Keep the live demo and source together when adapting the code. No attribution backlink is required by this project; keep the MIT copyright notice as required by its license.
 
 ## More from NovAsia
+
+For automated listing imports, use the [Listing Normalizer SDK on npm](https://www.npmjs.com/package/novasia-listing-normalizer) or [browse its source and batch examples](https://github.com/novasia-estate/listing-normalizer). It takes this browser tool's price and area parsing into typed JavaScript imports and a JSON CLI with row-level validation reports.
 
 - [NovAsia SEA Yield calculator](https://podkopov-hub.github.io/southeast-asia-real-estate-analytics/) and [npm package](https://www.npmjs.com/package/novasia-sea-yield)
 - [Property guides and research](https://novasia.estate/en/)
