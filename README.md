@@ -67,3 +67,11 @@ MIT © 2026 NovAsia.
 ### Exact installment schedules and paid-status review
 
 The [Payment Milestone Studio](https://tools.novasia.estate/payment-milestone-studio.html) extends the simple planner with chosen decimal precision, paid/overdue/outstanding totals, and three editable synthetic examples. [Source, reusable engine and CLI](https://github.com/novasia-estate/payment-milestone-studio). Published by [NovAsia Estate](https://novasia.estate/).
+
+## 1.1: reviewable cleaning provenance
+
+`cleanCSVAudit(text, options)` returns the same cleaned CSV plus `audit`: every logical input record has `kept` with its 1-based output record, `duplicate` with `duplicateOf` pointing to the first matching input, or `blank`. Original logical records count quoted multiline fields once. Formula protections identify original record and 1-based column (header is record 0). No raw values are copied into the audit. Duplicate comparison follows your trim/dedupe choices.
+
+The basic cleaner shows source record numbers and downloads `novasia-cleaning-audit.json`. Editing inputs hides all old downloads until recalculation. `cleanCSV` keeps its original return shape. This is an exact cleaning ledger, not an entity-identity matcher; the separate CSV Quality Lab quarantines repeated selected identities instead.
+
+The existing CSV Quality Lab and Payment Studio mirrors now include explicit identity review and partial-payment tracking respectively.

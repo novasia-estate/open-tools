@@ -126,22 +126,26 @@
   }
   function safeCell(value) { value = String(value); return /^[\s\uFEFF]*[=+\-@\t\r]/.test(value) ? "'" + value : value; }
   function csv(rows) { return rows.map(row => row.map(value => '"' + safeCell(value).replace(/"/g, '""') + '"').join(',')).join('\r\n') + '\r\n'; }
-  function cleanCSV(text, { delimiter = 'auto', trim = true, dedupe = true } = {}) {
+  function cleanCSV(text, { delimiter = 'auto', trim = true, dedupe = true, audit = false } = {}) {
     const parsed = parseCSV(text, delimiter);
     const rows = parsed.rows.map(row => row.map(value => trim ? value.trim() : value));
     const headers = rows.shift();
     if (!headers || headers.some(value => !value) || new Set(headers).size !== headers.length) throw Error('Headers must be nonempty and unique.');
-    const seen = new Set(), output = []; let duplicates = 0, blank = 0;
+    const seen = new Set(), firstRecords = new Map(), output = [], records = [], protectedPositions = []; let duplicates = 0, blank = 0, record = 0;
+    headers.forEach((v,i)=>{if(safeCell(v)!==v)protectedPositions.push({record:0,column:i+1});});
     for (const row of rows) {
-      if (row.every(value => !value.trim())) { blank++; continue; }
+      record++;
+      if (row.every(value => !value.trim())) { blank++; records.push({record,status:'blank'}); continue; }
       if (row.length !== headers.length) throw Error(`Data row ${output.length + duplicates + blank + 1} has ${row.length} columns; expected ${headers.length}. No columns were silently dropped.`);
       const key = JSON.stringify(row);
-      if (dedupe && seen.has(key)) { duplicates++; continue; }
-      seen.add(key); output.push(row);
+      if (dedupe && seen.has(key)) { duplicates++; records.push({record,status:'duplicate',duplicateOf:firstRecords.get(key)}); continue; }
+      seen.add(key); if(!firstRecords.has(key))firstRecords.set(key,record); output.push(row); records.push({record,status:'kept',outputRecord:output.length});
+      row.forEach((v,i)=>{if(safeCell(v)!==v)protectedPositions.push({record,column:i+1});});
     }
     const protectedCells = [headers, ...output].flat().filter(value => safeCell(value) !== value).length;
-    return { headers, rows: output, duplicates, blank, delimiter: parsed.delimiter, protectedCells, csv: csv([headers, ...output]) };
+    return { headers, rows: output, duplicates, blank, delimiter: parsed.delimiter, protectedCells, csv: csv([headers, ...output]), ...(audit?{audit:{schemaVersion:1,trim,dedupe,delimiter:parsed.delimiter,inputRecords:rows.length,outputRecords:output.length,records,protectedPositions}}:{}) };
   }
+  function cleanCSVAudit(text, options = {}) { return cleanCSV(text,{...options,audit:true}); }
   function calendar(plan, stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z')) {
     if (!/^\d{8}T\d{6}Z$/.test(stamp)) throw Error('Invalid calendar generation timestamp.');
     const escape = text => String(text).replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/;/g, '\\;').replace(/,/g, '\\,');
@@ -153,5 +157,5 @@
     lines.push('END:VCALENDAR');
     return lines.map(fold).join('\r\n') + '\r\n';
   }
-  return Object.freeze({ number, price, area, schedule, parseCSV, cleanCSV, csv, calendar, FACTORS });
+  return Object.freeze({ number, price, area, schedule, parseCSV, cleanCSV, cleanCSVAudit, csv, calendar, FACTORS });
 });

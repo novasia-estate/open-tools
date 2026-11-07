@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Map CSV columns, validate records and download a clear quality report. Free local spreadsheet and property-feed tool by NovAsia Estate."><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-nyRTKX4YB6eWxPWtK/UqedUMlRs5lnsDN4tqcn1AWfA='; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'"><title>CSV Quality Lab — NovAsia Estate</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Map CSV columns, validate records and download a clear quality report. Free local spreadsheet and property-feed tool by NovAsia Estate."><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-NFPZae45b6/b7SvphAzXxHsvKRyIdJ2hd+I1Eu5FgtQ='; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'"><title>CSV Quality Lab — NovAsia Estate</title>
 <style>
 :root{color-scheme:dark;--bg:#091e19;--panel:#122e26;--line:#345044;--gold:#dfb968;--muted:#b3c9bf;--ink:#f1f5ed}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}a{color:var(--gold);text-underline-offset:4px}button,input,textarea,select{font:inherit}button,a,input,textarea,select{outline-offset:4px}main,header,footer{max-width:1120px;margin:auto;padding:24px}header{display:flex;justify-content:space-between;gap:20px;align-items:center;border-bottom:1px solid var(--line)}.brand{font-weight:700;text-decoration:none}.badge,.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}h1{font-size:clamp(30px,5vw,48px);line-height:1.12;margin:14px 0}h2{font-size:22px;margin:0 0 12px}h3{font-size:17px}p{max-width:800px;color:var(--muted)}.intro{margin-bottom:28px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;margin:20px 0}.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.row label{flex:1}.secondary{background:transparent;color:var(--gold)}button{border:1px solid var(--gold);border-radius:9px;background:var(--gold);color:#17241c;padding:11px 18px;font-weight:650;cursor:pointer}button:disabled{opacity:.45;cursor:default}.secondary{color:var(--gold)}input,select,textarea{border:1px solid #527164;border-radius:7px;background:#0a211a;color:var(--ink);padding:9px;max-width:100%}textarea{width:100%;min-height:230px;font:13px/1.6 ui-monospace,monospace;margin:12px 0;resize:vertical}label{display:block;font-size:13px;color:var(--muted)}label>input:not([type=checkbox]),label>select{display:block;width:100%;margin-top:5px}input[type=file]{width:100%;margin-top:6px}.column-rule{display:grid;grid-template-columns:minmax(100px,1fr) 1fr 1fr 100px;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}.check{display:flex;align-items:center;gap:7px}.check input{width:18px;height:18px}.notice,.error{padding:14px 18px;border-left:3px solid var(--gold);background:var(--panel);margin:20px 0;color:var(--muted)}.error{border-color:#ff8989;color:#ffd3d3}#summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#09221b;border-radius:10px;padding:15px}.stat strong{display:block;font-size:30px;color:var(--gold)}.stat span{font-size:13px;color:var(--muted)}#preview{overflow:auto;max-height:380px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line);overflow-wrap:anywhere;max-width:240px}th{color:var(--gold)}#issues{padding-left:22px;color:var(--muted)}footer{border-top:1px solid var(--line);font-size:13px}.links{display:flex;gap:18px;flex-wrap:wrap}small{color:var(--muted)}[hidden]{display:none!important}@media(max-width:650px){main,header,footer{padding:16px}.panel{padding:17px}.badge{font-size:10px}.column-rule{grid-template-columns:1fr 1fr;gap:10px}.column-rule strong{grid-column:1/-1}#summary{grid-template-columns:1fr 1fr}button{width:100%}header .brand{white-space:nowrap}.row label{flex-basis:100%}}
 </style></head><body>
-<header><a class="brand" href="https://novasia.estate/" target="_blank" rel="noopener">NovAsia Estate ↗</a><span class="badge">Open data tools · v1.0</span></header>
+<header><a class="brand" href="https://novasia.estate/" target="_blank" rel="noopener">NovAsia Estate ↗</a><span class="badge">Open data tools · v1.1</span></header>
 <main><section class="intro"><span class="eyebrow">Spreadsheet imports, made reviewable</span><h1>CSV Quality Lab</h1><p>Rename columns, choose validation rules and separate clean records from rows that need attention. Built for property feeds, research tables and everyday spreadsheets.</p><small>Your CSV stays in this browser. No sign-up, input uploads or tracking by this app.</small></section>
 <section class="panel"><h2>1. Add your CSV</h2><div class="row"><label>Open UTF-8 CSV, up to 2 MB<input id="file" type="file" accept=".csv,.tsv,text/csv,text/tab-separated-values"></label><label>Delimiter<select id="delimiter"><option value="auto">Detect automatically</option><option value=",">Comma</option><option value=";">Semicolon</option><option value="&#9;">Tab</option></select></label></div><label for="csv">Or paste CSV text</label><textarea id="csv" spellcheck="false"></textarea><div class="row"><button id="inspect">Inspect columns</button><button id="example" class="secondary">Load synthetic example</button></div><p><small>The example contains 5 records: 2 valid, 2 needing review and 1 exact duplicate under its preset rules.</small></p></section>
-<section id="step-two" class="panel" hidden><h2>2. Choose the rules</h2><p>Every column is retained. New uploads start with text checks; select stricter rules where needed. Decimal formats are explicit and no currency or units are guessed.</p><div id="mapping"></div><div class="row" style="margin-top:18px"><label class="check"><input id="trim" type="checkbox" checked>Trim surrounding whitespace</label><label class="check"><input id="dedupe" type="checkbox" checked>Report and exclude exact duplicate accepted rows</label><button id="analyze">Run quality report</button></div></section>
+<section id="step-two" class="panel" hidden><h2>2. Choose the rules</h2><p>Every column is retained. New uploads start with text checks; select stricter rules where needed. Decimal formats are explicit and no currency or units are guessed.</p><p>Select Identity key only for columns that jointly identify a source record. All repeated keys will go to review; no first/last winner is chosen.</p><div id="mapping"></div><div class="row" style="margin-top:18px"><label class="check"><input id="trim" type="checkbox" checked>Trim surrounding whitespace</label><label class="check"><input id="dedupe" type="checkbox" checked>Report and exclude exact duplicate accepted rows</label><button id="analyze">Run quality report</button></div></section>
 <div id="status" role="status" aria-live="polite"></div>
 <section id="results" class="panel" hidden><h2>3. Review and export</h2><div id="summary"></div><h3>Validation notes</h3><ul id="issues"></ul><h3>Accepted records preview</h3><div id="preview"></div><div class="row" style="margin-top:22px"><button id="download-good" disabled>Accepted CSV</button><button id="download-rejected" class="secondary" disabled>Rows needing review</button><button id="download-report" class="secondary" disabled>Full JSON report</button></div><p><small>Rejected records retain their original fields in a separate report. Record numbers exclude the header and count quoted multiline fields as one record. Formula-like CSV values are prefixed with an apostrophe; JSON retains original text.</small></p></section>
 <section class="panel"><h2>Continue your data workflow</h2><p>Clean table structure first, then normalize property price and area fields with the <a href="https://www.npmjs.com/package/novasia-listing-normalizer" target="_blank" rel="noopener">Listing Normalizer SDK</a>. For a quick one-off conversion, try the <a href="https://tools.novasia.estate/normalizer.html" target="_blank" rel="noopener">price and area demo</a>.</p><p>Published by <a href="https://novasia.estate/" target="_blank" rel="noopener">NovAsia Estate — property projects and research in Southeast Asia</a>. Format checks do not verify market prices, ownership, availability, email delivery or the truth of a dataset.</p></section>
@@ -63,7 +63,7 @@
     return false;
   }
   function analyze(text, options={}) {
-    const {delimiter='auto',trim=true,dedupe=true,columns}=options;
+    const {delimiter='auto',trim=true,dedupe=true,columns,identityColumns=[]}=options;
     if(typeof trim!=='boolean'||typeof dedupe!=='boolean') throw Error('trim and dedupe must be true or false.');
     const parsed=parseCSV(text,delimiter),headers=inspect(text,delimiter).headers;
     const rules=columns===undefined ? headers.map(source=>({source,target:source,type:'text',required:false})) : columns;
@@ -76,6 +76,15 @@
       sources.add(rule.source);names.add(rule.target);
     }
     const indices=rules.map(rule=>headers.indexOf(rule.source)),outputHeaders=rules.map(rule=>rule.target);
+    if(!Array.isArray(identityColumns)||identityColumns.length>headers.length||identityColumns.some(name=>typeof name!=='string'||!names.has(name))||new Set(identityColumns).size!==identityColumns.length) throw Error('Identity columns must be unique mapped output names.');
+    const identityIndices=identityColumns.map(name=>outputHeaders.indexOf(name)),identityGroups=new Map();
+    const identityKey=row=>JSON.stringify(identityIndices.map(i=>row[i]));
+    if(identityIndices.length) parsed.rows.slice(1).forEach((input,index)=>{
+      if(input.length!==headers.length||input.every(cell=>!cell.trim()))return;
+      const row=indices.map(i=>trim?input[i].trim():input[i]);
+      if(identityIndices.some(i=>!row[i].trim()))return;
+      const key=identityKey(row);if(!identityGroups.has(key))identityGroups.set(key,[]);identityGroups.get(key).push(index+1);
+    });
     const accepted=[],rejected=[],issues=[],duplicates=[],blankRows=[],seen=new Map();
     parsed.rows.slice(1).forEach((input,index)=>{
       const record=index+1; // Logical data record, excluding header; not a physical line number.
@@ -90,13 +99,18 @@
         if(!value.trim()) { if(rule.required) problems.push({record,column:rule.target,code:'required',message:'Required value is empty.'}); }
         else if(!valid(value,rule.type)) problems.push({record,column:rule.target,code:'type',message:`Expected ${rule.type}; value retained without guessing.`});
       });
+      if(identityIndices.length) {
+        if(identityIndices.some(i=>!row[i].trim()))problems.push({record,code:'identity_missing',message:'Selected identity fields must be nonblank; row retained for review.'});
+        else if(identityGroups.get(identityKey(row)).length>1)problems.push({record,code:'duplicate_identity',message:'Selected identity is repeated; every occurrence is retained for review, with no chosen winner.'});
+      }
       if(problems.length) {issues.push(...problems);rejected.push({record,original:input,issues:problems});return;}
       const key=JSON.stringify(row);
       if(dedupe&&seen.has(key)) {duplicates.push({record,duplicateOf:seen.get(key)});return;}
       seen.set(key,record);accepted.push({record,values:row});
     });
     const protectedCells=[outputHeaders,...accepted.map(row=>row.values)].flat().filter(value=>safeCell(value)!==value).length;
-    return {version:'1.0.0',delimiter:parsed.delimiter,headers:outputHeaders,
+    return {version:'1.1.0',delimiter:parsed.delimiter,headers:outputHeaders,
+      ...(identityIndices.length?{identityReview:{columns:[...identityColumns],conflictGroups:[...identityGroups.values()].filter(records=>records.length>1).map(records=>({records}))}}:{}),
       summary:{inputRecords:parsed.rows.length-1,accepted:accepted.length,rejected:rejected.length,duplicates:duplicates.length,blank:blankRows.length,issues:issues.length,protectedCells},
       accepted,rejected,issues,duplicates,blankRows,
       cleanedCSV:csv([outputHeaders,...accepted.map(row=>row.values)]),
@@ -125,9 +139,11 @@ function inspectColumns(preset){
       const target=node('input');target.value=rule.target;target.maxLength=200;target.setAttribute('aria-label','Output name for '+source);nameLabel.append(target);
       const typeLabel=node('label','Check');const type=node('select');type.setAttribute('aria-label','Type for '+source);
       for(const value of CSVQuality.TYPES){const opt=node('option',value);opt.value=value;type.append(opt);}type.value=rule.type;typeLabel.append(type);
-      const reqLabel=node('label');reqLabel.className='check';const required=node('input');required.type='checkbox';required.checked=rule.required;reqLabel.append(required,node('span','Required'));
-      card.append(title,nameLabel,typeLabel,reqLabel);$('mapping').append(card);mapping.push({source,target,type,required});
-      for(const control of [target,type,required])control.addEventListener('change',invalidate);
+      const reqLabel=node('label');reqLabel.className='check';const required=node('input');required.type='checkbox';required.checked=rule.required;required.setAttribute('aria-label','Required for '+source);reqLabel.append(required,node('span','Required'));
+      const identityLabel=node('label');identityLabel.className='check';const identity=node('input');identity.type='checkbox';identity.checked=!!preset?.identityColumns?.includes(rule.target);identity.setAttribute('aria-label','Identity key for '+source);identityLabel.append(identity,node('span','Identity key'));
+      const checks=node('div');checks.append(reqLabel,identityLabel);
+      card.append(title,nameLabel,typeLabel,checks);$('mapping').append(card);mapping.push({source,target,type,required,identity});
+      for(const control of [target,type,required,identity])control.addEventListener('change',invalidate);
     }
     $('step-two').hidden=false;$('analyze').disabled=false;
     message(`${result.headers.length} columns · ${result.dataRows} data records. Review the rules, then run the report.`);
@@ -137,7 +153,7 @@ function run(){
   invalidate();
   try{
     if(inspectedText!==$('csv').value)throw Error('CSV changed. Inspect columns again before analysing.');
-    report=CSVQuality.analyze($('csv').value,{delimiter:$('delimiter').value,trim:$('trim').checked,dedupe:$('dedupe').checked,columns:mapping.map(m=>({source:m.source,target:m.target.value,type:m.type.value,required:m.required.checked}))});
+    report=CSVQuality.analyze($('csv').value,{delimiter:$('delimiter').value,trim:$('trim').checked,dedupe:$('dedupe').checked,identityColumns:mapping.filter(m=>m.identity.checked).map(m=>m.target.value),columns:mapping.map(m=>({source:m.source,target:m.target.value,type:m.type.value,required:m.required.checked}))});
     $('summary').replaceChildren();
     for(const [label,key] of [['Accepted','accepted'],['Needs review','rejected'],['Duplicates','duplicates'],['Blank records','blank']]){const card=node('div');card.className='stat';card.append(node('strong',String(report.summary[key])),node('span',label));$('summary').append(card);}
     $('issues').replaceChildren();for(const issue of report.issues.slice(0,30))$('issues').append(node('li',`Record ${issue.record}${issue.column?' · '+issue.column:''}: ${issue.message}`));
@@ -145,7 +161,7 @@ function run(){
     const table=node('table'),head=node('thead'),tr=node('tr');for(const h of ['Record',...report.headers])tr.append(node('th',h));head.append(tr);table.append(head);
     const body=node('tbody');for(const row of report.accepted.slice(0,12)){const tr=node('tr');for(const cell of [row.record,...row.values])tr.append(node('td',String(cell)));body.append(tr);}table.append(body);$('preview').replaceChildren(table);
     $('results').hidden=false;for(const id of ['download-good','download-rejected','download-report'])$(id).disabled=false;
-    message(`${report.summary.issues} validation issues. ${report.summary.protectedCells} formula-like cells will be escaped in the accepted CSV. Preview shows up to 12 accepted records; JSON contains all records and issues.`);
+    message(`${report.summary.issues} validation issues. ${report.identityReview?report.identityReview.conflictGroups.length+' repeated identity groups quarantined. ':''}${report.summary.protectedCells} formula-like cells will be escaped in the accepted CSV. Preview shows up to 12 accepted records; JSON contains all records and issues.`);
   }catch(error){message(error.message,true);}
 }
 function download(kind){if(!report)return;const content=kind==='json'?JSON.stringify(report,null,2):kind==='rejected'?report.rejectedCSV:report.cleanedCSV;const blob=new Blob([content],{type:kind==='json'?'application/json':'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob),a=node('a');a.href=url;a.download=kind==='json'?'csv-quality-report.json':kind==='rejected'?'csv-needs-review.csv':'csv-accepted.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}

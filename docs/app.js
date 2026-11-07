@@ -36,17 +36,20 @@
         result.append(element('p', `${data.rows.length} milestones · 100% allocated · dates are user inputs`, 'hint'));
         document.querySelector('#download-csv').hidden = false; document.querySelector('#download-ics').hidden = false;
       } else if (mode === 'cleaner') {
-        data = T.cleanCSV(value('csv'), { delimiter: value('delimiter') === 'tab' ? '\t' : value('delimiter'), trim: form.elements.namedItem('trim').checked, dedupe: form.elements.namedItem('dedupe').checked });
+        data = T.cleanCSVAudit(value('csv'), { delimiter: value('delimiter') === 'tab' ? '\t' : value('delimiter'), trim: form.elements.namedItem('trim').checked, dedupe: form.elements.namedItem('dedupe').checked });
         result.replaceChildren(); result.className = '';
         metric('Rows ready to export', String(data.rows.length));
         result.append(element('p', `${data.duplicates} duplicates removed · ${data.blank} blank rows removed · ${data.headers.length} columns`, 'hint'));
         if (data.protectedCells) result.append(element('p', `${data.protectedCells} cells will receive formula protection in the download.`, 'hint'));
-        table(data.headers, data.rows.slice(0, 20));
+        table(['Source record',...data.headers], data.rows.slice(0,20).map((row,i)=>[data.audit.records.filter(r=>r.status==='kept')[i].record,...row]));
+        const details=element('details');details.append(element('summary','Cleaning decisions and formula protection'),element('pre',JSON.stringify(data.audit,null,2)));result.append(details);
+        document.querySelector('#download-audit').hidden=false;
         document.querySelector('#download-csv').hidden = false;
       }
       exportData = data;
     } catch (err) { result.replaceChildren(element('p', 'No export produced. Check the input and try again.', 'empty')); error.textContent = err.message; error.hidden = false; }
   };
+  document.querySelector('#download-audit')?.addEventListener('click',()=>{if(exportData?.audit)download(JSON.stringify(exportData.audit,null,2)+'\n','novasia-cleaning-audit.json','application/json');});
   form.addEventListener('submit', event => { event.preventDefault(); calculate(); });
   document.querySelector('#download-json')?.addEventListener('click', () => { if (exportData) download(JSON.stringify(exportData, null, 2) + '\n', 'novasia-normalized-listing.json', 'application/json'); });
   document.querySelector('#download-csv')?.addEventListener('click', () => { if (!exportData) return; const text = mode === 'planner' ? T.csv([['milestone', 'date', 'percentage', 'amount', 'currency'], ...exportData.rows.map(row => [row.label, row.date, row.percent, row.amount.toFixed(2), row.currency])]) : exportData.csv; download(text, mode === 'planner' ? 'novasia-payment-plan.csv' : 'novasia-cleaned.csv', 'text/csv;charset=utf-8'); });
